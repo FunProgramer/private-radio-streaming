@@ -1,4 +1,4 @@
-# private-radio-streaming
+# Unoffical Telegram Source Client for Icecast2
 Icecast2 source client for streaming telegram audio controlled by a web interface.
 
 This client has a web interface, that accepts a telegram url and streams that through icecast.
