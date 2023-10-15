@@ -1,7 +1,7 @@
-# Unofficial Telegram Source Client for Icecast2
-Icecast2 source client for streaming telegram audio controlled by a web interface.
+# Private Radio Station
+Internet Radio Station controlled by a web interface used for private use cases.
 
-This client has a web interface, that accepts a telegram url and streams that through icecast.
+This Radio Station Software has a web interface, that accepts a telegram url.
 Through the web interface you can also control the playback (fast-forward, rewind, pause).
 
 Note: This project is currently only a blank template.
