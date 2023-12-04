@@ -69,6 +69,15 @@ def read_sources(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     return crud.get_sources(db, skip, limit)
 
 
+@app.patch(path="/sources/{source_id}", response_model=schemas.Source)
+def update_source(source_id: int, source: schemas.SourceUpdate, db: Session = Depends(get_db)):
+    try:
+        return crud.update_source(db, source, source_id)
+    except crud.DoesNotExistException:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Source with id {} does not exist".format(source_id))
+
+
 @app.post("/channels/", response_model=schemas.Channel, status_code=status.HTTP_201_CREATED)
 def create_channel(channel: schemas.ChannelCreate, db: Session = Depends(get_db)):
     exception = check_len(channel.stream_path, "stream_path", settings.max_str_length)

@@ -16,6 +16,12 @@ class Source(SourceBase):
         from_attributes = True
 
 
+# The Update Types are used for updating multiple or single specific attributes
+class SourceUpdate(BaseModel):
+    display_name: str | None = None
+    filename: str | None = None
+
+
 class ChannelBase(BaseModel):
     stream_path: str
     source_id: int
