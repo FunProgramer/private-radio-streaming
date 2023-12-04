@@ -162,3 +162,5 @@ cython_debug/
 /.idea/modules.xml
 /.idea/telegram-icecast.iml
 /.idea/vcs.xml
+/.idea/radio-station.iml
+/.idea/workspace.xml
