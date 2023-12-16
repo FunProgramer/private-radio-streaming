@@ -1,12 +1,13 @@
 import random
 import string
 
+import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
 
-from . import crud, models, schemas
-from .config import settings
-from .database import SessionLocal, engine
+from radiostation import crud, models, schemas
+from radiostation.config import settings
+from radiostation.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -120,3 +121,7 @@ def read_channels(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     for channel in channels:
         channel.is_playing = False
     return channels
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

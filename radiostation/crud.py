@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from . import models, schemas
+from radiostation import models, schemas
 
 
 class DoesNotExistException(Exception):

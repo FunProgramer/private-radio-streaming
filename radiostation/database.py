@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from .config import settings
+from radiostation.config import settings
 
 SQLALCHEMY_DATABASE_URL = "mysql+pymysql://{}:{}@{}/radiostation".format(
     settings.db_user, settings.db_password, settings.db_server

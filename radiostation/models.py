@@ -1,8 +1,8 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from .database import Base
-from .config import settings
+from radiostation.database import Base
+from radiostation.config import settings
 
 
 class Source(Base):
