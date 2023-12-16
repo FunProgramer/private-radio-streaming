@@ -24,7 +24,7 @@ class SourceUpdate(BaseModel):
 
 class ChannelBase(BaseModel):
     stream_path: str
-    source_id: int
+    source_id: int | None
 
 
 # Create Types include values that are only needed for creation

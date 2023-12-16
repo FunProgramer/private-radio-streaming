@@ -44,6 +44,20 @@ def update_source(db: Session, source: schemas.SourceUpdate, source_id: int):
     return db_source
 
 
+def delete_source(db: Session, source_id: int):
+    db_source = get_source(db, source_id)
+    if not db_source:
+        raise DoesNotExistException()
+
+    # Remove source_id from the related channels
+    for channel in db.query(models.Channel).filter(models.Channel.source_id == source_id).all():
+        channel.source_id = None
+        db.add(db_source)
+
+    db.delete(db_source)
+    db.commit()
+
+
 def get_channels(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Channel).offset(skip).limit(limit).all()
 

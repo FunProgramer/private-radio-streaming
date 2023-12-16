@@ -78,6 +78,15 @@ def update_source(source_id: int, source: schemas.SourceUpdate, db: Session = De
                             detail="Source with id {} does not exist".format(source_id))
 
 
+@app.delete(path="/sources/{source_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_source(source_id: int, db: Session = Depends(get_db)):
+    try:
+        crud.delete_source(db, source_id)
+    except crud.DoesNotExistException:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Source with id {} does not exist".format(source_id))
+
+
 @app.post("/channels/", response_model=schemas.Channel, status_code=status.HTTP_201_CREATED)
 def create_channel(channel: schemas.ChannelCreate, db: Session = Depends(get_db)):
     exception = check_len(channel.stream_path, "stream_path", settings.max_str_length)
