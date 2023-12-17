@@ -89,3 +89,11 @@ def update_channel(db: Session, channel: schemas.ChannelUpdate, channel_id: int)
     db.commit()
     db.refresh(db_channel)
     return db_channel
+
+
+def delete_channel(db: Session, channel_id: int):
+    db_channel = get_channel(db, channel_id)
+    if not db_channel:
+        raise DoesNotExistException()
+    db.delete(db_channel)
+    db.commit()

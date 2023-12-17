@@ -136,5 +136,14 @@ def update_channel(channel_id: int, channel: schemas.ChannelUpdate, db: Session 
                             detail="Channel with id {} does not exist".format(channel_id))
 
 
+@app.delete(path="/channels/{channel_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_source(channel_id: int, db: Session = Depends(get_db)):
+    try:
+        crud.delete_channel(db, channel_id)
+    except crud.DoesNotExistException:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Channel with id {} does not exist".format(channel_id))
+
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
