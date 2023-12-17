@@ -39,3 +39,10 @@ class Channel(ChannelBase):
 
     class Config:
         from_attributes = True
+
+
+class ChannelUpdate(BaseModel):
+    stream_path: str | None = None
+    source_id: int | None = None
+    pos: int | None = None
+    is_playing: bool | None = None

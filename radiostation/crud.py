@@ -58,6 +58,10 @@ def delete_source(db: Session, source_id: int):
     db.commit()
 
 
+def get_channel(db: Session, channel_id: int):
+    return db.query(models.Channel).filter(models.Channel.id == channel_id).first()
+
+
 def get_channels(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Channel).offset(skip).limit(limit).all()
 
@@ -68,6 +72,19 @@ def get_channel_by_stream_path(db: Session, stream_path: str):
 
 def create_channel(db: Session, channel: schemas.ChannelCreate):
     db_channel = models.Channel(**channel.model_dump(), pos=0)
+    db.add(db_channel)
+    db.commit()
+    db.refresh(db_channel)
+    return db_channel
+
+
+def update_channel(db: Session, channel: schemas.ChannelUpdate, channel_id: int):
+    db_channel = get_channel(db, channel_id)
+    if not db_channel:
+        raise DoesNotExistException()
+    channel_data = channel.model_dump(exclude_unset=True)
+    for key, value in channel_data.items():
+        setattr(db_channel, key, value)
     db.add(db_channel)
     db.commit()
     db.refresh(db_channel)

@@ -123,5 +123,18 @@ def read_channels(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     return channels
 
 
+@app.patch(path="/channels/{channel_id}", response_model=schemas.Channel)
+def update_channel(channel_id: int, channel: schemas.ChannelUpdate, db: Session = Depends(get_db)):
+    try:
+        if channel.is_playing:
+            channel.is_playing = None
+        updated_channel = crud.update_channel(db, channel, channel_id)
+        updated_channel.is_playing = False
+        return updated_channel
+    except crud.DoesNotExistException:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Channel with id {} does not exist".format(channel_id))
+
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
