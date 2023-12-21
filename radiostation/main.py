@@ -1,8 +1,9 @@
 import random
 import string
+from typing import Annotated
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
 from radiostation import crud, models, schemas
@@ -41,13 +42,11 @@ def check_len(var, var_name, max_len):
 
 
 @app.post("/sources/", response_model=schemas.Source, status_code=status.HTTP_201_CREATED)
-def create_source(display_name: str, db: Session = Depends(get_db)):
+def create_source(display_name: Annotated[str, Query(max_length=settings.max_str_length)],
+                  db: Session = Depends(get_db)):
     # Because we have no real upload for now use random file name str
     filename = get_random_string(10) + '.mp3'
 
-    exception = check_len(display_name, "display_name", settings.max_str_length)
-    if exception:
-        raise exception
     exception = check_len(filename, "filename", settings.max_str_length)
     if exception:
         raise exception
