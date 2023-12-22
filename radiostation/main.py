@@ -89,10 +89,6 @@ def delete_source(source_id: int, db: Session = Depends(get_db)):
 
 @app.post("/channels/", response_model=schemas.Channel, status_code=status.HTTP_201_CREATED)
 def create_channel(channel: schemas.ChannelCreate, db: Session = Depends(get_db)):
-    exception = check_len(channel.stream_path, "stream_path", settings.max_str_length)
-    if exception:
-        raise exception
-
     db_source = crud.get_source(db, channel.source_id)
     if not db_source:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
