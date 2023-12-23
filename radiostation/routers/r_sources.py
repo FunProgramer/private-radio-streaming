@@ -10,6 +10,7 @@ import schemas
 from config import settings
 from dependencies import get_db
 
+tag = "sources"
 router = APIRouter()
 
 
@@ -19,7 +20,7 @@ def get_random_string(length):
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-@router.post("/sources/", response_model=schemas.Source, status_code=status.HTTP_201_CREATED)
+@router.post("/sources/", tags=[tag], response_model=schemas.Source, status_code=status.HTTP_201_CREATED)
 def create_source(display_name: Annotated[str, Query(max_length=settings.max_str_length)],
                   db: Session = Depends(get_db)):
     # Because we have no real upload for now use random file name str
@@ -48,12 +49,12 @@ def create_source(display_name: Annotated[str, Query(max_length=settings.max_str
                             detail="Source with {} '{}' already exits".format(e.key_name, value))
 
 
-@router.get("/sources/", response_model=list[schemas.Source])
+@router.get("/sources/", tags=[tag], response_model=list[schemas.Source])
 def read_sources(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_sources(db, skip, limit)
 
 
-@router.patch(path="/sources/{source_id}", response_model=schemas.Source)
+@router.patch(path="/sources/{source_id}", tags=[tag], response_model=schemas.Source)
 def update_source(source_id: int, source: schemas.SourceUpdate, db: Session = Depends(get_db)):
     try:
         return crud.update_source(db, source, source_id)
@@ -62,7 +63,7 @@ def update_source(source_id: int, source: schemas.SourceUpdate, db: Session = De
                             detail="Source with id {} does not exist".format(source_id))
 
 
-@router.delete(path="/sources/{source_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(path="/sources/{source_id}", tags=[tag], status_code=status.HTTP_204_NO_CONTENT)
 def delete_source(source_id: int, db: Session = Depends(get_db)):
     try:
         crud.delete_source(db, source_id)

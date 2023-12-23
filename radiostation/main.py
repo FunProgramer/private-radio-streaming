@@ -7,7 +7,18 @@ from routers import r_channels, r_sources
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+tags_metadata = [
+    {
+        "name": "sources",
+        "description": "Operations to manage sources that can be streamed via `channels`"
+    },
+    {
+        "name": "channels",
+        "description": "Operations to manage channels. Channels are organizing the audio streaming"
+    }
+]
+
+app = FastAPI(openapi_tags=tags_metadata)
 
 app.include_router(r_channels.router)
 app.include_router(r_sources.router)

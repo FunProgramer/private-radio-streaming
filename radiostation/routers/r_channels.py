@@ -5,10 +5,11 @@ import crud
 import schemas
 from dependencies import get_db
 
+tag = "channels"
 router = APIRouter()
 
 
-@router.post("/channels/", response_model=schemas.Channel, status_code=status.HTTP_201_CREATED)
+@router.post("/channels/", tags=[tag], response_model=schemas.Channel, status_code=status.HTTP_201_CREATED)
 def create_channel(channel: schemas.ChannelCreate, db: Session = Depends(get_db)):
     try:
         created_channel = crud.create_channel(db, channel)
@@ -28,7 +29,7 @@ def create_channel(channel: schemas.ChannelCreate, db: Session = Depends(get_db)
     )
 
 
-@router.get("/channels/", response_model=list[schemas.Channel])
+@router.get("/channels/", tags=[tag], response_model=list[schemas.Channel])
 def read_channels(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     channels = crud.get_channels(db, skip, limit)
     for channel in channels:
@@ -36,7 +37,7 @@ def read_channels(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     return channels
 
 
-@router.patch(path="/channels/{channel_id}", response_model=schemas.Channel)
+@router.patch(path="/channels/{channel_id}", tags=[tag], response_model=schemas.Channel)
 def update_channel(channel_id: int, channel: schemas.ChannelUpdate, db: Session = Depends(get_db)):
     try:
         if channel.is_playing:
@@ -49,7 +50,7 @@ def update_channel(channel_id: int, channel: schemas.ChannelUpdate, db: Session 
                             detail="Channel with id {} does not exist".format(channel_id))
 
 
-@router.delete(path="/channels/{channel_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(path="/channels/{channel_id}", tags=[tag], status_code=status.HTTP_204_NO_CONTENT)
 def delete_source(channel_id: int, db: Session = Depends(get_db)):
     try:
         crud.delete_channel(db, channel_id)
