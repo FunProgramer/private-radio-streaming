@@ -51,7 +51,7 @@ def update_channel(channel_id: int, channel: schemas.ChannelUpdate, db: Session 
 
 
 @router.delete(path="/channels/{channel_id}", tags=[tag], status_code=status.HTTP_204_NO_CONTENT)
-def delete_source(channel_id: int, db: Session = Depends(get_db)):
+def delete_channel(channel_id: int, db: Session = Depends(get_db)):
     try:
         crud.delete_channel(db, channel_id)
     except crud.DoesNotExistException:
