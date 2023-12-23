@@ -7,6 +7,11 @@ class DoesNotExistException(Exception):
     pass
 
 
+class DoesAlreadyExistException(Exception):
+    def __init__(self, key_name):
+        self.key_name = key_name
+
+
 def get_source(db: Session, source_id: int):
     return db.query(models.Source).filter(models.Source.id == source_id).first()
 
@@ -24,6 +29,11 @@ def get_sources(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_source(db: Session, display_name: str, filename: str):
+    if get_source_by_filename(db, filename):
+        raise DoesAlreadyExistException("filename")
+    if get_source_by_display_name(db, display_name):
+        raise DoesAlreadyExistException("display_name")
+
     db_source = models.Source(display_name=display_name, filename=filename)
     db.add(db_source)
     db.commit()
@@ -52,7 +62,7 @@ def delete_source(db: Session, source_id: int):
     # Remove source_id from the related channels
     for channel in db.query(models.Channel).filter(models.Channel.source_id == source_id).all():
         channel.source_id = None
-        db.add(db_source)
+        db.add(channel)
 
     db.delete(db_source)
     db.commit()
@@ -71,6 +81,11 @@ def get_channel_by_stream_path(db: Session, stream_path: str):
 
 
 def create_channel(db: Session, channel: schemas.ChannelCreate):
+    if not get_source(db, channel.source_id):
+        raise DoesNotExistException()
+    if get_channel_by_stream_path(db, channel.stream_path):
+        raise DoesAlreadyExistException("stream_path")
+
     db_channel = models.Channel(**channel.model_dump(), pos=0)
     db.add(db_channel)
     db.commit()
